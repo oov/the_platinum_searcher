@@ -15,9 +15,11 @@ var Asserts = []Assert{
 	Assert{"ascii.txt", "go", file.ASCII, "go test"},
 	Assert{"ja/euc-jp.txt", "go", file.EUCJP, "go テスト"},
 	Assert{"ja/shift_jis.txt", "go", file.SHIFTJIS, "go テスト"},
+	Assert{"ja/iso-2022-jp.txt", "go", file.ISO2022JP, "go テスト"},
 	Assert{"ja/utf8.txt", "go", file.UTF8, "go テスト"},
 	Assert{"ja/broken_euc-jp.txt", "go", file.EUCJP, "go テスト"},
 	Assert{"ja/broken_shift_jis.txt", "go", file.SHIFTJIS, "go テスト"},
+	Assert{"ja/broken_iso-2022-jp.txt", "go", file.ISO2022JP, "go テスト"},
 	Assert{"ja/broken_utf8.txt", "go", file.UTF8, "go テスト"},
 }
 

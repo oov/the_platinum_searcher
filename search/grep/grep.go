@@ -41,6 +41,8 @@ func getDecoder(encode string) transform.Transformer {
 		return japanese.EUCJP.NewDecoder()
 	case file.SHIFTJIS:
 		return japanese.ShiftJIS.NewDecoder()
+	case file.ISO2022JP:
+		return japanese.ISO2022JP.NewDecoder()
 	}
 	return nil
 }

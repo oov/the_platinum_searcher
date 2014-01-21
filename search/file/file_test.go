@@ -13,9 +13,11 @@ var Asserts = []Assert{
 	Assert{"binary/binary.bin", BINARY},
 	Assert{"ja/euc-jp.txt", EUCJP},
 	Assert{"ja/shift_jis.txt", SHIFTJIS},
+	Assert{"ja/iso-2022-jp.txt", ISO2022JP},
 	Assert{"ja/utf8.txt", UTF8},
 	Assert{"ja/broken_euc-jp.txt", EUCJP},
 	Assert{"ja/broken_shift_jis.txt", SHIFTJIS},
+	Assert{"ja/broken_iso-2022-jp.txt", ISO2022JP},
 	Assert{"ja/broken_utf8.txt", UTF8},
 }
 

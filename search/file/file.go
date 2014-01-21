@@ -5,11 +5,12 @@ import (
 )
 
 const (
-	BINARY   = "Binary"
-	ASCII    = "ASCII"
-	UTF8     = "UTF-8"
-	EUCJP    = "EUC-JP"
-	SHIFTJIS = "Shift_JIS"
+	BINARY    = "Binary"
+	ASCII     = "ASCII"
+	UTF8      = "UTF-8"
+	EUCJP     = "EUC-JP"
+	SHIFTJIS  = "Shift_JIS"
+	ISO2022JP = "ISO-2022-JP"
 )
 
 func IdentifyType(path string) string {
@@ -19,6 +20,7 @@ func IdentifyType(path string) string {
 		likelyUtf8      = 0
 		likelyEucjp     = 0
 		likelyShiftjis  = 0
+		likelyIso2022jp = 0
 	)
 
 	file, _ := os.Open(path)
@@ -97,6 +99,25 @@ func IdentifyType(path string) string {
 				}
 			}
 
+			/* ISO-2022-JP detection */
+			if bs[i] == 27 && i+2 < total {
+				i++
+				switch bs[i] {
+				case 36:
+					i++
+					if bs[i] == 64 || bs[i] == 66 || bs[i] == 68 {
+						likelyIso2022jp++
+						continue
+					}
+				case 40:
+					i++
+					if bs[i] == 66 || bs[i] == 73 || bs[i] == 74 {
+						likelyIso2022jp++
+						continue
+					}
+				}
+			}
+
 			suspiciousBytes++
 			if i >= 32 && (suspiciousBytes*100)/total > 10 {
 				return BINARY
@@ -111,14 +132,16 @@ func IdentifyType(path string) string {
 
 	// fmt.Printf("Detected points[utf8/eucjp/shiftjis] is %d/%d/%d.\n", likelyUtf8, likelyEucjp, likelyShiftjis)
 
-	if likelyUtf8 == 0 && likelyEucjp == 0 && likelyShiftjis == 0 {
+	if likelyUtf8 == 0 && likelyEucjp == 0 && likelyShiftjis == 0 && likelyIso2022jp == 0 {
 		return ASCII
-	} else if likelyUtf8 >= likelyEucjp && likelyUtf8 >= likelyShiftjis {
+	} else if likelyUtf8 >= likelyEucjp && likelyUtf8 >= likelyShiftjis && likelyUtf8 >= likelyIso2022jp {
 		return UTF8
-	} else if likelyEucjp >= likelyUtf8 && likelyEucjp >= likelyShiftjis {
+	} else if likelyEucjp >= likelyUtf8 && likelyEucjp >= likelyShiftjis && likelyEucjp >= likelyIso2022jp {
 		return EUCJP
-	} else if likelyShiftjis >= likelyUtf8 && likelyShiftjis >= likelyEucjp {
+	} else if likelyShiftjis >= likelyUtf8 && likelyShiftjis >= likelyEucjp && likelyShiftjis >= likelyIso2022jp {
 		return SHIFTJIS
+	} else if likelyIso2022jp >= likelyUtf8 && likelyIso2022jp >= likelyEucjp && likelyIso2022jp >= likelyShiftjis {
+		return ISO2022JP
 	}
 
 	return ASCII
